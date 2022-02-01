@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
@@ -38,14 +39,18 @@ class MainFragment : Fragment() {
         binding.asteroidRecycler.adapter = adapter
 
 
+
+        //Observe the API response and set the list accordingly
         viewModel.asteroids.observe(viewLifecycleOwner, Observer {
-                //TODO
+                //adapter.data.clear()
+                //adapter.data.addAll(it)
+                //adapter.notifyDataSetChanged()
         })
 
 
+        //viewModel.apiAsteroidList()
+        //viewModel.dummyAsteroid(adapter) //call function to create list of dummy asteroid
 
-        viewModel.dummyAsteroid(adapter) //call function to create list of dummy asteroid
-        viewModel.apiAsteroidList()
 
 
         setHasOptionsMenu(true)

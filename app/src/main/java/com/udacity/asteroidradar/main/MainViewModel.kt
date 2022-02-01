@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.api.Api
+import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -17,27 +19,27 @@ class MainViewModel() : ViewModel() {
     private val _asteroids = MutableLiveData<List<Asteroid>>()
     val asteroids: LiveData<List<Asteroid>> get() = _asteroids
 
-    private var asteroidList = ArrayList<Asteroid>()
+    private var asteroidList = mutableListOf<Asteroid>()
 
-    init {
+    /*init {
         _asteroids.value = asteroidList
-    }
+    }*/
 
 
      private fun getAsteroids() {
         viewModelScope.launch {
             try {
-                val requestCall = Api.retrofitService.getAsteroidsList(Constants.API_KEY,"2022-01-01","2022-01-05")
-                requestCall.enqueue(object: Callback<List<Asteroid>>{
+                val requestCall = Api.retrofitService.getAsteroidsList(Constants.API_KEY,"2022-02-01","2022-02-05")
+                requestCall.enqueue(object: Callback<String>{
 
-                    override fun onResponse(call: Call<List<Asteroid>>, response: Response<List<Asteroid>>) {
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
                         if (response.isSuccessful) {
-                            asteroidList = (response.body() as ArrayList<Asteroid>)
-                            _asteroids.value = asteroidList
+                            asteroidList = parseAsteroidsJsonResult(JSONObject(response.body()!!))  //use the parseAsteroidetc..
+                            //_asteroids.value = asteroidList
                         }
                     }
 
-                    override fun onFailure(call: Call<List<Asteroid>>, t: Throwable) {
+                    override fun onFailure(call: Call<String>, t: Throwable) {
                         //TODO
                     }
                 })

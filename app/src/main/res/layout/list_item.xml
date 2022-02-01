@@ -5,7 +5,7 @@
 
     <data>
         <variable
-            name="asteroidInfo"
+            name="asteroid"
             type="com.udacity.asteroidradar.Asteroid" />
     </data>
 
@@ -16,7 +16,7 @@
         android:layout_margin="8dp">
 
         <androidx.appcompat.widget.AppCompatTextView
-
+            android:text="@{asteroid.codename}"
             style="@style/titleStyle"
             android:id="@+id/itemCodename"
             android:layout_width="0dp"
@@ -31,7 +31,7 @@
             app:layout_constraintBottom_toTopOf="@+id/itemCloseApproachDate"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-
+            android:text="@{asteroid.closeApproachDate}"
             style="@style/underTitleStyle"
             android:id="@+id/itemCloseApproachDate"
             android:layout_width="0dp"

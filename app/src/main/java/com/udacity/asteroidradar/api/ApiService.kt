@@ -7,6 +7,7 @@ import com.udacity.asteroidradar.Constants
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -22,6 +23,7 @@ private val moshi = Moshi.Builder()
 //Build the Retrofit object (with the Moshi converter built above)
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(MoshiConverterFactory.create(moshi))
+    .addConverterFactory(ScalarsConverterFactory.create())  //this is used for strings =  the data contains dynamic JSON keys and we cannot use Moshi to directly map the response to data class
     .baseUrl(Constants.BASE_URL)
     .build()
 
@@ -34,7 +36,7 @@ interface ApiService {
         @Query("api_key") apiKey: String = Constants.API_KEY,
         @Query("start_date") startDate: String,
         @Query("end_date") endDate: String
-    ) : Call<List<Asteroid>>
+    ) : Call<String>
 }
 
 //The object Api instantiate the retrofit service "containing" the ApiService created above
