@@ -36,10 +36,7 @@ class MainFragment : Fragment() {
         })
         binding.asteroidRecycler.adapter = adapter
 
-        viewModel.apiAsteroidList()
-
-        val toast = viewModel.checkpoint
-        Toast.makeText(requireContext(), toast, Toast.LENGTH_LONG).show()
+        viewModel.apiAsteroidList() //calls the method for getting data from NASA API
 
         //Observe the API response and set the list accordingly
         viewModel.asteroids.observe(viewLifecycleOwner, Observer {
@@ -49,16 +46,9 @@ class MainFragment : Fragment() {
         })
 
 
-
-
-        //viewModel.dummyAsteroid(adapter) //call function to create list of dummy asteroid
-
-
-
         setHasOptionsMenu(true)
         return binding.root
     }
-
 
 
     //inflate menu layout

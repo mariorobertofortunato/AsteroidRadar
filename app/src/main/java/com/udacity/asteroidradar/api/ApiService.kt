@@ -13,15 +13,17 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 /** THIS WHOLE APISERVICE.KT BASICALLY SERVES AS A BUILDER FOR THE Api OBJECT (THE "WAITER"),
- * IN ORDER TO DEFINE ITS FUNCIONS ( AKA "getAsteroidList").
+ * IN ORDER TO DEFINE ITS FUNCTIONS ( AKA "getAsteroidList").
  *  MOSHI --> RETROFIT --> APISERVICE **/
 
 //Build the Moshi converter used by Retrofit (KotlinJsonAdapterFactory = from JSON object to Kotlin object)
+//This is used for the "Image of the day"
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
 
-//Build the Retrofit object (with the Moshi converter built above)
+//Build the Retrofit object (NOT with the Moshi converter built above, BUT ScalarsConverterFactory)
+//APPARENTLY  if you use Moshi as a converter for dynamic JSON keys (or in combination?) it just won't work, it kinda blocks the call.enqueue method, fuck knows why
 private val retrofit = Retrofit.Builder()
     //.addConverterFactory(MoshiConverterFactory.create(moshi))
     .addConverterFactory(ScalarsConverterFactory.create())  //this is used for strings =  the data contains dynamic JSON keys and we cannot use Moshi to directly map the response to data class

@@ -17,7 +17,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:text="@{asteroid.codename}"
-            style="@style/titleStyle"
+            style="@style/headlineStyle"
             android:id="@+id/itemCodename"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:text="@{asteroid.closeApproachDate}"
-            style="@style/underTitleStyle"
+            style="@style/subTitleStyle"
             android:id="@+id/itemCloseApproachDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
