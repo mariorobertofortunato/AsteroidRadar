@@ -1,8 +1,11 @@
 package com.udacity.asteroidradar.main
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -21,16 +24,11 @@ class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
-        //binding init & inflate
         val binding = FragmentMainBinding.inflate(inflater)
-
-        //declare lifecycle
         binding.lifecycleOwner = this
-
-        //viewModel binding
         binding.viewModel = viewModel
 
-        //tells the RecyclerView about the adapter to use, while setting up the action
+        //tell the RecyclerView about the adapter to use, while setting up the action
         // to be triggered when the item in the adapter (or better, in the VH) is clicked,
         //passing the data from the item as a safearg
         val adapter = AsteroidAdapter(AsteroidAdapter.OnClickListener {
@@ -38,17 +36,21 @@ class MainFragment : Fragment() {
         })
         binding.asteroidRecycler.adapter = adapter
 
+        viewModel.apiAsteroidList()
 
+        val toast = viewModel.checkpoint
+        Toast.makeText(requireContext(), toast, Toast.LENGTH_LONG).show()
 
         //Observe the API response and set the list accordingly
         viewModel.asteroids.observe(viewLifecycleOwner, Observer {
-                //adapter.data.clear()
-                //adapter.data.addAll(it)
-                //adapter.notifyDataSetChanged()
+            adapter.data.clear()
+            adapter.data.addAll(it)
+            adapter.notifyDataSetChanged()
         })
 
 
-        //viewModel.apiAsteroidList()
+
+
         //viewModel.dummyAsteroid(adapter) //call function to create list of dummy asteroid
 
 
@@ -56,6 +58,7 @@ class MainFragment : Fragment() {
         setHasOptionsMenu(true)
         return binding.root
     }
+
 
 
     //inflate menu layout

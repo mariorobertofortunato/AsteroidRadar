@@ -5,6 +5,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -22,7 +23,7 @@ private val moshi = Moshi.Builder()
 
 //Build the Retrofit object (with the Moshi converter built above)
 private val retrofit = Retrofit.Builder()
-    .addConverterFactory(MoshiConverterFactory.create(moshi))
+    //.addConverterFactory(MoshiConverterFactory.create(moshi))
     .addConverterFactory(ScalarsConverterFactory.create())  //this is used for strings =  the data contains dynamic JSON keys and we cannot use Moshi to directly map the response to data class
     .baseUrl(Constants.BASE_URL)
     .build()
@@ -32,10 +33,10 @@ private val retrofit = Retrofit.Builder()
 // (= @GET which returns the list of asteroids)
 interface ApiService {
     @GET("neo/rest/v1/feed")
-    suspend fun getAsteroidsList(
-        @Query("api_key") apiKey: String = Constants.API_KEY,
-        @Query("start_date") startDate: String,
-        @Query("end_date") endDate: String
+    fun getAsteroidsList(
+        @Query("api_key") api_key: String = Constants.API_KEY,
+        @Query("start_date") start_date: String,
+        @Query("end_date") end_date: String
     ) : Call<String>
 }
 

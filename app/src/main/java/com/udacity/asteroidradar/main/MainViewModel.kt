@@ -1,5 +1,6 @@
 package com.udacity.asteroidradar.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,37 +15,35 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainViewModel() : ViewModel() {
+class MainViewModel : ViewModel() {
 
     private val _asteroids = MutableLiveData<List<Asteroid>>()
     val asteroids: LiveData<List<Asteroid>> get() = _asteroids
 
-    private var asteroidList = mutableListOf<Asteroid>()
-
-    /*init {
-        _asteroids.value = asteroidList
-    }*/
+    private var asteroidList = ArrayList<Asteroid>()
+    var checkpoint = "Init checkToast value"
 
 
-     private fun getAsteroids() {
+    private fun getAsteroids() {
         viewModelScope.launch {
             try {
-                val requestCall = Api.retrofitService.getAsteroidsList(Constants.API_KEY,"2022-02-01","2022-02-05")
-                requestCall.enqueue(object: Callback<String>{
-
+                val requestCall = Api.retrofitService.getAsteroidsList(Constants.API_KEY, "2022-02-01","2022-02-02")
+                requestCall.enqueue(object : Callback<String> {
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         if (response.isSuccessful) {
-                            asteroidList = parseAsteroidsJsonResult(JSONObject(response.body()!!))  //use the parseAsteroidetc..
-                            //_asteroids.value = asteroidList
+                            asteroidList = parseAsteroidsJsonResult(JSONObject(response.body()!!)) as ArrayList<Asteroid>
+                            _asteroids.value = asteroidList
                         }
                     }
-
                     override fun onFailure(call: Call<String>, t: Throwable) {
-                        //TODO
+                        Log.d("TAG_", "An error happened!")
                     }
                 })
-            } catch (e: Exception) { }
+            } catch (e: Exception) {
+            }
         }
+
+
     }
 
     fun apiAsteroidList () {
