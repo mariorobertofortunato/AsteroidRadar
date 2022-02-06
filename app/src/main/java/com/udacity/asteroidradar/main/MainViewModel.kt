@@ -69,7 +69,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun getPictureOfTheDay () {
+    fun getImageOfTheDay () {
         refreshImageOfTheDay()
     }
 

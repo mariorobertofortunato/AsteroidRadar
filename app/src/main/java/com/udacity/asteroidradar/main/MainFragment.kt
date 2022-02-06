@@ -40,7 +40,7 @@ class MainFragment : Fragment() {
             adapter.notifyDataSetChanged()
         })
 
-        viewModel.getPictureOfTheDay() //call the method for gettin the pic from NASA API
+        viewModel.getImageOfTheDay() //call the method for gettin the pic from NASA API
         //Observe the API response and set the image into the ImageView
         viewModel.pictureOfTheDay.observe(viewLifecycleOwner, Observer {
             Picasso.get().load(it.url).into(binding.activityMainImageOfTheDay)
