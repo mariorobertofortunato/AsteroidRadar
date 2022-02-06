@@ -33,7 +33,7 @@ class MainFragment : Fragment() {
         binding.asteroidRecycler.adapter = adapter
 
         viewModel.getAsteroidList() //calls the method for getting asteroid list from NASA API
-        //Observe the API response and set the list accordingly
+        //Observe the list of asteroids and set it with the API response
         viewModel.asteroids.observe(viewLifecycleOwner, Observer {
             adapter.data.clear()
             adapter.data.addAll(it)
@@ -41,7 +41,7 @@ class MainFragment : Fragment() {
         })
 
         viewModel.getImageOfTheDay() //call the method for gettin the pic from NASA API
-        //Observe the API response and set the image into the ImageView
+        //Observe the image and put the API response into the ImageView
         viewModel.pictureOfTheDay.observe(viewLifecycleOwner, Observer {
             Picasso.get().load(it.url).into(binding.activityMainImageOfTheDay)
         })
