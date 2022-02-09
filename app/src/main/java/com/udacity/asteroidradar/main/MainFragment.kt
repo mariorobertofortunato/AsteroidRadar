@@ -1,10 +1,9 @@
 package com.udacity.asteroidradar.main
 
-<<<<<<< HEAD
+
 import android.app.Application
-=======
+
 import android.content.Context
->>>>>>> parent of bf0a2f7 (Don't know why, but it fuckin works now)
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -13,6 +12,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
@@ -20,21 +20,14 @@ import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
 
-<<<<<<< HEAD
+
     private lateinit var viewModel: MainViewModel
     private lateinit var viewModelFactory: MainViewModelFactory
 
-    private lateinit var asteroidAdapter: AsteroidAdapter
-
-=======
-    //viewModel declaration (extended from MainViewModel.kt class
-    private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this)[MainViewModel::class.java]
-    }
->>>>>>> parent of bf0a2f7 (Don't know why, but it fuckin works now)
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
         val binding = FragmentMainBinding.inflate(inflater)
         binding.lifecycleOwner = this
@@ -46,28 +39,29 @@ class MainFragment : Fragment() {
             findNavController().navigate(MainFragmentDirections.actionShowDetail(it))
         })
         binding.asteroidRecycler.adapter = adapter
-<<<<<<< HEAD
-        viewModel.asteroids.observe(viewLifecycleOwner) {
-            viewModel.getAsteroidList()
-=======
 
-        viewModel.apiAsteroidList() //calls the method for getting data from NASA API
-
+        viewModel.getAsteroidList() //calls the method for getting asteroid list from NASA API
         //Observe the API response and set the list accordingly
         viewModel.asteroids.observe(viewLifecycleOwner, Observer {
             adapter.data.clear()
->>>>>>> parent of bf0a2f7 (Don't know why, but it fuckin works now)
             adapter.data.addAll(it)
-        }
+            adapter.notifyDataSetChanged()
+        })
 
-<<<<<<< HEAD
-        setHasOptionsMenu(true)
+        viewModel.getImageOfTheDay() //call the method for gettin the pic from NASA API
+        //Observe the API response and set the image into the ImageView
+        viewModel.pictureOfTheDay.observe(viewLifecycleOwner, Observer {
+            Picasso.get().load(it.url).into(binding.activityMainImageOfTheDay)
+        })
+
+        viewModel.asteroids.observe(viewLifecycleOwner) {
+            viewModel.getAsteroidList()}
+
+            setHasOptionsMenu(true)
+
+
         return binding.root
     }
-
-
-=======
->>>>>>> parent of bf0a2f7 (Don't know why, but it fuckin works now)
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -81,8 +75,6 @@ class MainFragment : Fragment() {
     }
 
 
-
-
     //inflate menu layout
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main_overflow_menu, menu)
@@ -93,13 +85,11 @@ class MainFragment : Fragment() {
         // Apply filter
         return true
     }
-
-
-
-
-
-
 }
+
+
+
+
 
 
 
