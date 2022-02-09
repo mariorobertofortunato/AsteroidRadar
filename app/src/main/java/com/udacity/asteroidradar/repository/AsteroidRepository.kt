@@ -11,6 +11,7 @@ import com.udacity.asteroidradar.api.getToday
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.database.AsteroidDao
 import com.udacity.asteroidradar.database.AsteroidRoomDatabase
+import com.udacity.asteroidradar.database.asDbModel
 import com.udacity.asteroidradar.database.asDomainModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,7 +23,7 @@ import retrofit2.Response
 class AsteroidRepository(private val database: AsteroidRoomDatabase) {
 
     //trasforma le entities (asteroide di DB) in domainModel (asteroide di app)
-    val allAsteroids: LiveData<List<Asteroid>> = Transformations.map(
+    var allAsteroids: LiveData<List<Asteroid>> = Transformations.map(
         database.asteroidDao().getAll()
     ) {
         it.asDomainModel()
@@ -44,7 +45,7 @@ class AsteroidRepository(private val database: AsteroidRoomDatabase) {
                         if (response.isSuccessful) {
                             val asteroidList =
                                 parseAsteroidsJsonResult(JSONObject(response.body()!!))
-                            database.asteroidDao().insertAll(asteroidList)
+                            database.asteroidDao().insertAll(asteroidList.asDbModel())
                         }
                     }
                     override fun onFailure(call: Call<String>, t: Throwable) {

@@ -6,6 +6,7 @@ import com.udacity.asteroidradar.Constants
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 fun parseAsteroidsJsonResult(jsonObject: JSONObject): MutableList<Asteroid> {
     val asteroidList = mutableListOf<Asteroid>()
@@ -43,7 +44,7 @@ fun parseAsteroidsJsonResult(jsonObject: JSONObject): MutableList<Asteroid> {
             asteroidList.add(asteroid)
         }
     }
-    return asteroidList
+    return ArrayList(asteroidList)
 }
 
 fun getToday(): String {

@@ -1,7 +1,6 @@
 package com.udacity.asteroidradar.main
 
 
-
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
@@ -22,12 +21,11 @@ import retrofit2.Response
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    // THIS LINE MAKES THE APP CRASH
-   //val asteroidRepository = AsteroidRepository(getDB(application))
+    val asteroidRepository = AsteroidRepository(getDB(application))
+    val allAsteroids = asteroidRepository.allAsteroids
 
     private val _asteroids = MutableLiveData<List<Asteroid>>()
     val asteroids: LiveData<List<Asteroid>> get() = _asteroids //backin property asteroids
-    private var asteroidList = ArrayList<Asteroid>()
 
     private val _pictureOfTheDay = MutableLiveData<PictureOfDay>() //backin property img
     val pictureOfTheDay: LiveData<PictureOfDay> get() = _pictureOfTheDay
@@ -36,7 +34,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private fun refreshAsteroidRepository() {
         viewModelScope.launch {
             try {
-                //asteroidRepository.refreshAsteroidsList()
+                asteroidRepository.refreshAsteroidsList()
             } catch (e: Exception) {
             }
         }
@@ -46,7 +44,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         refreshAsteroidRepository()
     }
 
-    fun getAsteroidList () {
+    fun getAsteroidList() {
         refreshAsteroidRepository()
     }
 
@@ -55,11 +53,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val requestCall = ApiImage.retrofitServiceImage.getImageOfTheDay(Constants.API_KEY)
                 requestCall.enqueue(object : Callback<PictureOfDay> {
-                    override fun onResponse(call: Call<PictureOfDay>, response: Response<PictureOfDay>) {
-                        if (response.body()?.mediaType=="image") {
+                    override fun onResponse(
+                        call: Call<PictureOfDay>,
+                        response: Response<PictureOfDay>
+                    ) {
+                        if (response.body()?.mediaType == "image") {
                             _pictureOfTheDay.value = response.body()
                         }
                     }
+
                     override fun onFailure(call: Call<PictureOfDay>, t: Throwable) {
                         Log.d("TAG_", "An error happened!")
                     }
@@ -69,12 +71,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun getImageOfTheDay () {
+    fun getImageOfTheDay() {
         refreshImageOfTheDay()
     }
-
-
-
 
 
 }

@@ -14,7 +14,7 @@ abstract class AsteroidRoomDatabase : RoomDatabase() {
 }
     /** Create an instance of the RoomDB with the method getDB*/
 
-    // @Volatile
+
     private var INSTANCE: AsteroidRoomDatabase? = null        //Declare the instance
 
     fun getDB(context: Context): AsteroidRoomDatabase {
