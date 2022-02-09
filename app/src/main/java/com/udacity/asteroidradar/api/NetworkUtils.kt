@@ -1,14 +1,11 @@
 package com.udacity.asteroidradar.api
 
-import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
+import com.squareup.moshi.JsonClass
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 fun parseAsteroidsJsonResult(jsonObject: JSONObject): MutableList<Asteroid> {
     val asteroidList = mutableListOf<Asteroid>()
@@ -64,3 +61,21 @@ private fun formatDate(date: Date): String {
     val dateFormat = SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT, Locale.getDefault())
     return dateFormat.format(date)
 }
+
+
+
+@JsonClass(generateAdapter = true)
+data class AsteroidNetwork(val asteroids: List<NetworkAsteroid>)
+
+@JsonClass(generateAdapter = true)
+data class NetworkAsteroid (
+    val id: Long,
+    val codename: String,
+    val closeApproachDate: String,
+    val absoluteMagnitude: Double,
+    val estimatedDiameter: Double,
+    val relativeVelocity: Double,
+    val distanceFromEarth: Double,
+    val isPotentiallyHazardous: Boolean
+        )
+

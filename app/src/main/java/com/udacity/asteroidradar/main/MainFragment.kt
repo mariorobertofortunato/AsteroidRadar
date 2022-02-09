@@ -1,5 +1,6 @@
 package com.udacity.asteroidradar.main
 
+import android.app.Application
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -13,44 +14,48 @@ import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
 
-    private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this)[MainViewModel::class.java]
-    }
+    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModelFactory: MainViewModelFactory
+
+    private lateinit var asteroidAdapter: AsteroidAdapter
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+        savedInstanceState: Bundle?): View {
 
         val binding = FragmentMainBinding.inflate(inflater)
         binding.lifecycleOwner = this
+        viewModelFactory = MainViewModelFactory(Application())
+        viewModel = ViewModelProvider(this, viewModelFactory)
+            .get(MainViewModel::class.java)
         binding.viewModel = viewModel
-
-        //tell the RecyclerView about the adapter to use, while setting up the action
-        // to be triggered when the item in the adapter (or better, in the VH) is clicked,
-        //passing the data from the item as a safearg
         val adapter = AsteroidAdapter(AsteroidAdapter.OnClickListener {
             findNavController().navigate(MainFragmentDirections.actionShowDetail(it))
         })
         binding.asteroidRecycler.adapter = adapter
-
-        viewModel.getAsteroidList() //calls the method for getting asteroid list from NASA API
-        //Observe the list of asteroids and set it with the API response
-        viewModel.asteroids.observe(viewLifecycleOwner, Observer {
-            adapter.data.clear()
+        viewModel.asteroids.observe(viewLifecycleOwner) {
+            viewModel.getAsteroidList()
             adapter.data.addAll(it)
-            adapter.notifyDataSetChanged()
-        })
-
-        viewModel.getImageOfTheDay() //call the method for gettin the pic from NASA API
-        //Observe the image and put the API response into the ImageView
-        viewModel.pictureOfTheDay.observe(viewLifecycleOwner, Observer {
-            Picasso.get().load(it.url).into(binding.activityMainImageOfTheDay)
-        })
-
-
+        }
 
         setHasOptionsMenu(true)
         return binding.root
     }
+
+
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.getImageOfTheDay() //call the method for gettin the pic from NASA API
+        //Observe the image and put the API response into the ImageView
+        viewModel.pictureOfTheDay.observe(viewLifecycleOwner, Observer {
+            //Picasso.get().load(it.url).into(binding.activityMainImageOfTheDay)
+        })
+    }
+
+
 
 
     //inflate menu layout
@@ -60,8 +65,13 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Apply filter
         return true
     }
+
+
+
+
 
 
 }
