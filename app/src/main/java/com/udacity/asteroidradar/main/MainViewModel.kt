@@ -10,10 +10,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
+<<<<<<< HEAD
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.ApiImage
 import com.udacity.asteroidradar.database.getDB
 import com.udacity.asteroidradar.repository.AsteroidRepository
+=======
+import com.udacity.asteroidradar.api.Api
+import com.udacity.asteroidradar.api.getSeventhDay
+import com.udacity.asteroidradar.api.getToday
+import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
+>>>>>>> parent of bf0a2f7 (Don't know why, but it fuckin works now)
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -26,22 +33,37 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
 
     private val _asteroids = MutableLiveData<List<Asteroid>>()
-    val asteroids: LiveData<List<Asteroid>> get() = _asteroids //backin property asteroids
+    val asteroids: LiveData<List<Asteroid>> get() = _asteroids
+
     private var asteroidList = ArrayList<Asteroid>()
 
-    private val _pictureOfTheDay = MutableLiveData<PictureOfDay>() //backin property img
-    val pictureOfTheDay: LiveData<PictureOfDay> get() = _pictureOfTheDay
-
-
+<<<<<<< HEAD
     private fun refreshAsteroidRepository() {
         viewModelScope.launch {
             try {
                 //asteroidRepository.refreshAsteroidsList()
+=======
+    private fun getAsteroids() {
+        viewModelScope.launch {
+            try {
+                val requestCall = Api.retrofitService.getAsteroidsList(Constants.API_KEY, getToday(), getSeventhDay())
+                requestCall.enqueue(object : Callback<String> {
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        if (response.isSuccessful) {
+                            asteroidList = parseAsteroidsJsonResult(JSONObject(response.body()!!)) as ArrayList<Asteroid>
+                            _asteroids.value = asteroidList
+                        }
+                    }
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+                        Log.d("TAG_", "An error happened!")
+                    }
+                })
+>>>>>>> parent of bf0a2f7 (Don't know why, but it fuckin works now)
             } catch (e: Exception) {
             }
         }
-    }
 
+<<<<<<< HEAD
     init {
         refreshAsteroidRepository()
     }
@@ -49,34 +71,27 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun getAsteroidList () {
         refreshAsteroidRepository()
     }
+=======
+>>>>>>> parent of bf0a2f7 (Don't know why, but it fuckin works now)
 
-    private fun refreshImageOfTheDay() {
-        viewModelScope.launch {
-            try {
-                val requestCall = ApiImage.retrofitServiceImage.getImageOfTheDay(Constants.API_KEY)
-                requestCall.enqueue(object : Callback<PictureOfDay> {
-                    override fun onResponse(call: Call<PictureOfDay>, response: Response<PictureOfDay>) {
-                        if (response.body()?.mediaType=="image") {
-                            _pictureOfTheDay.value = response.body()
-                        }
-                    }
-                    override fun onFailure(call: Call<PictureOfDay>, t: Throwable) {
-                        Log.d("TAG_", "An error happened!")
-                    }
-                })
-            } catch (e: Exception) {
-            }
-        }
     }
 
+<<<<<<< HEAD
     fun getImageOfTheDay () {
         refreshImageOfTheDay()
+=======
+    fun apiAsteroidList () {
+        getAsteroids()
+>>>>>>> parent of bf0a2f7 (Don't know why, but it fuckin works now)
     }
 
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of bf0a2f7 (Don't know why, but it fuckin works now)
 }
 
 
