@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar.database
 
 import android.os.Parcelable
+import androidx.lifecycle.LiveData
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.udacity.asteroidradar.Asteroid
@@ -25,7 +26,7 @@ data class AsteroidDB constructor(
  * Map DatabaseVideos to domain entities =
  * convert AsteroidDB objects into domain objects.
  */
-fun List<AsteroidDB>.asDomainModel(): List<Asteroid>{
+fun List<AsteroidDB>.asDomainModel(): List<Asteroid> {
     return map {
         Asteroid(
             id = it.id,

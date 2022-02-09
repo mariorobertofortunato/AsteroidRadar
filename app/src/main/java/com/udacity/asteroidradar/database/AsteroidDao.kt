@@ -7,7 +7,7 @@ import com.udacity.asteroidradar.Asteroid
 /** Defines the methods for accessing the DB aka
  * provides the methods that the rest of the app uses to interact with data in the asteroid_db table.*/
 @Dao
-abstract interface AsteroidDao {
+interface AsteroidDao {
 
     @Query("SELECT * FROM asteroids_db")
     fun getAll(): LiveData<List<AsteroidDB>>

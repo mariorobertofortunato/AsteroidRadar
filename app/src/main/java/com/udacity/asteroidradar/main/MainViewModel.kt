@@ -3,14 +3,12 @@ package com.udacity.asteroidradar.main
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.ApiImage
+import com.udacity.asteroidradar.database.asDomainModel
 
 import com.udacity.asteroidradar.database.getDB
 import com.udacity.asteroidradar.repository.AsteroidRepository
@@ -21,8 +19,15 @@ import retrofit2.Response
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    val asteroidRepository = AsteroidRepository(getDB(application))
-    val allAsteroids = asteroidRepository.allAsteroids
+    private val database = getDB(application)
+    private val asteroidRepository = AsteroidRepository(database)
+
+    //trasforma le entities (asteroide di DB) in domainModel (asteroide di app)
+    var allAsteroids : LiveData<List<Asteroid>> = Transformations.map(
+        database.asteroidDao().getAll()
+    ) {
+        it.asDomainModel()
+    }
 
     private val _asteroids = MutableLiveData<List<Asteroid>>()
     val asteroids: LiveData<List<Asteroid>> get() = _asteroids //backin property asteroids
@@ -40,9 +45,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    init {
-        refreshAsteroidRepository()
-    }
 
     fun getAsteroidList() {
         refreshAsteroidRepository()
