@@ -41,12 +41,10 @@ class MainFragment : Fragment() {
         })
 
         viewModel.getAsteroidList()
-        viewModel.allAsteroids.observe(viewLifecycleOwner, Observer<List<Asteroid>> { asteroids ->
-            asteroids.apply {
+        viewModel.allAsteroids.observe(viewLifecycleOwner, Observer {
                 adapter.data.clear()
-                adapter.data.addAll(this)
+                adapter.data.addAll(it)
                 adapter.notifyDataSetChanged()
-            }
         })
 
         setHasOptionsMenu(true)
