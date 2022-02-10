@@ -9,7 +9,6 @@ import kotlinx.android.parcel.Parcelize
 
 /** Defines the schema of the database, aka the fields of every entity in the DB
  * Each instance of Asteroid represents a row in a asteroid table in the app's database.*/
-
 @Entity (tableName = "asteroids_db")
 data class AsteroidDB constructor(
     @PrimaryKey
@@ -40,7 +39,8 @@ fun List<AsteroidDB>.asDomainModel(): List<Asteroid> {
         )
     }
 }
-fun List<Asteroid>.asDbModel(): List<AsteroidDB>{
+/**VICEVERSA*/
+fun ArrayList<Asteroid>.asDBModel(): List<AsteroidDB> {
     return map {
         AsteroidDB(
             id = it.id,
@@ -54,4 +54,5 @@ fun List<Asteroid>.asDbModel(): List<AsteroidDB>{
         )
     }
 }
+
 

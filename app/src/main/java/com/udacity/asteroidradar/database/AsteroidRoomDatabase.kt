@@ -10,24 +10,21 @@ import androidx.room.RoomDatabase
 /** DB holder class*/
 @Database (entities = [AsteroidDB::class], version = 1)
 abstract class AsteroidRoomDatabase : RoomDatabase() {
-    abstract fun asteroidDao(): AsteroidDao
+    abstract val asteroidDao: AsteroidDao
 }
     /** Create an instance of the RoomDB with the method getDB*/
 
-
-    private var INSTANCE: AsteroidRoomDatabase? = null        //Declare the instance
+    private lateinit var INSTANCE: AsteroidRoomDatabase
 
     fun getDB(context: Context): AsteroidRoomDatabase {
-        return INSTANCE ?: synchronized(AsteroidRoomDatabase::class.java) {
-            val instance = Room.databaseBuilder(
-                context.applicationContext,
-                AsteroidRoomDatabase::class.java,
-                "asteroid_database"
-            ).build()
-            INSTANCE = instance
-            // return instance
-            instance
+        synchronized(AsteroidRoomDatabase::class.java) {
+            if (!::INSTANCE.isInitialized) {
+                INSTANCE = Room
+                    .databaseBuilder(context.applicationContext, AsteroidRoomDatabase::class.java, "asteroids")
+                    .build()
+            }
         }
+        return INSTANCE
     }
 
 

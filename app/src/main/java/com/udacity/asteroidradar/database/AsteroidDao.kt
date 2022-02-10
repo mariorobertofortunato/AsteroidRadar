@@ -9,11 +9,11 @@ import com.udacity.asteroidradar.Asteroid
 @Dao
 interface AsteroidDao {
 
-    @Query("SELECT * FROM asteroids_db")
+    @Query("SELECT * FROM asteroids_db ORDER BY closeApproachDate ASC")     //prende tutti gli asteroidi già ordinati per closeapproachdate
     fun getAll(): LiveData<List<AsteroidDB>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    @JvmSuppressWildcards
-    fun insertAll(asteroidList: List<AsteroidDB>)
+    suspend fun insertAll(asteroids: List<AsteroidDB>)
+
 
 }
