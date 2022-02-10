@@ -17,15 +17,14 @@ import org.json.JSONObject
 
 class AsteroidRepository(private val database: AsteroidRoomDatabase) {
 
-    //trasforma le entities (asteroide di DB) in domainModel (asteroide di app)
     var allAsteroids: LiveData<List<Asteroid>> = Transformations.map(database.asteroidDao.getAll())
     { it.asDomainModel() }
 
-    /** TODO
-     * val asteroids("range di date"): LiveData<List<Asteroid>> =
-     * Transformations.map(database.asteroidDao.getOneDayAsteroids(DATA PASSATA COME PARAMETRO))
-     * { it.asDomainModel() }
-     * */
+    var todayAsteroids: LiveData<List<Asteroid>> = Transformations.map(database.asteroidDao.getToday(getToday()))
+    { it.asDomainModel() }
+
+    var weekAsteroids: LiveData<List<Asteroid>> = Transformations.map(database.asteroidDao.getWeek(getToday(), getSeventhDay()))
+    { it.asDomainModel() }
 
 
     /**API used to refresh offline cache (= the DB)*/
