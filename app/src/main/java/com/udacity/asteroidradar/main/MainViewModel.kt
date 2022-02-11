@@ -42,6 +42,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+
     private fun refreshAsteroid() {
         viewModelScope.launch {
             try {

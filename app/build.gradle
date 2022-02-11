@@ -91,4 +91,7 @@ dependencies {
 
     // optional - Multiprocess support
     implementation "androidx.work:work-multiprocess:2.7.1"
+
+    //Adding Swipe Refresh Layout Dependency
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 }
