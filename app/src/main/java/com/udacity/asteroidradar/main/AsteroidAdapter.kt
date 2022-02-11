@@ -5,21 +5,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.R
 
-
+/** Adatta la lista di asteroidi in modo che posso essere mostrata dal RecyclerView
+    creo il "mio" adapter (=AsteroidAdapter) come sottoclasse di ListAdapter
+    e gli dico quale VH deve usare dentro il mio adapter (=il VH che definisco sotto, dentro l'adapter stesso).
+For implementing a dynamic list it is best practice to use ListAdapter.
+ListAdapter is just an extension of RecyclerView.Adapter.
+It computes the difference between list items on a background thread and provides nice
+animation for any change in data items with help of AsyncListDiffer*/
 class AsteroidAdapter(private val clickListener: OnClickListener) :
-    RecyclerView.Adapter<AsteroidAdapter.ViewHolder>() {        //Adatta la lista di asteroidi in modo che posso essere mostrata dal RecyclerView
-                                                                //creo il "mio" adapter (=AsteroidAdapter) come sottoclasse di RecyclerView.Adapter
-                                                                //e gli dico quale VH deve usare dentro il mio adapter (=il VH che definisco sotto, dentro l'adapter stesso).
+    androidx.recyclerview.widget.ListAdapter<Asteroid, AsteroidAdapter.ViewHolder>(DiffCallback()) {
 
-    var data = ArrayList<Asteroid>()    //the list of asteroids
-                                        //(crea una variabile "data" di tipo "array di Asteroid".
-                                        //quindi si può accedere ai singoli oggetti della lista tramite la posizione nella lista)
+    //the list of asteroids
+    //(crea una variabile "data" di tipo "array di Asteroid".
+    //quindi si può accedere ai singoli oggetti della lista tramite la posizione nella lista)
+    var data = ArrayList<Asteroid>()
 
-    // TODO NOTIFYDATACHANGES????
 
     override fun getItemCount(): Int {  //Returns the total number of items in the data set held by the adapter.
         return data.size
@@ -59,7 +64,7 @@ class AsteroidAdapter(private val clickListener: OnClickListener) :
         return ViewHolder(view)
     }
 
-    //Definisce come è fatto il VH, attraverso il parametro view
+    //Definisce come gestire i data dentro al VH, attraverso il parametro view
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val codename: TextView = view.findViewById(R.id.itemCodename)
         val closeApproachDate: TextView = view.findViewById(R.id.itemCloseApproachDate)
@@ -68,5 +73,15 @@ class AsteroidAdapter(private val clickListener: OnClickListener) :
 
     class OnClickListener(val clickListener: (asteroid: Asteroid) -> Unit) {
         fun onClick(asteroid: Asteroid) = clickListener(asteroid)
+    }
+
+    class DiffCallback : DiffUtil.ItemCallback<Asteroid>(){
+        override fun areItemsTheSame(oldItem: Asteroid, newItem: Asteroid): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Asteroid, newItem: Asteroid): Boolean {
+            return oldItem == newItem
+        }
     }
 }

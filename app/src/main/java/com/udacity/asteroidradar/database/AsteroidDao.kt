@@ -1,8 +1,10 @@
 package com.udacity.asteroidradar.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
-import com.udacity.asteroidradar.Asteroid
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 
 /** Defines the methods for accessing the DB aka
  * provides the methods that the rest of the app uses to interact with data in the asteroid_db table.*/

@@ -2,11 +2,9 @@ package com.udacity.asteroidradar.api
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.PictureOfDay
 import okhttp3.OkHttpClient
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -18,8 +16,20 @@ import java.util.concurrent.TimeUnit
  * IN ORDER TO DEFINE ITS FUNCTIONS ( AKA "getAsteroidList" + "getImageOfTheDay").
  *  MOSHI --> RETROFIT --> APISERVICE **/
 
-// Client for modification of connection time-out
+// Client for modification of connection time-out.
+// Furthermore, since more than one network API has api_key as a query parameter,
+// create an API interceptor and chain it with your network requests to avoid
+// repetitively passing the API key as a parameter.
 private val okHttpClient= OkHttpClient.Builder()
+    .addInterceptor{ chain ->
+        val url = chain
+            .request()
+            .url()
+            .newBuilder()
+            .addQueryParameter("api_key", Constants.API_KEY)
+            .build()
+        chain.proceed(chain.request().newBuilder().url(url).build())
+    }
     .connectTimeout(1, TimeUnit.MINUTES)
     .readTimeout(30, TimeUnit.SECONDS)
     .writeTimeout(15, TimeUnit.SECONDS)
@@ -34,18 +44,16 @@ private val moshi = Moshi.Builder()
 // This interface represent the group of requests that I can operate
 // with the Api. The interface defines the method getAsteroidsList
 // and getImageOfTheDay (= @GET which returns the url of the pic of the day)
+// In this case there's no need to pass the ApiKey as a Query since it's chained in the okHttpClient
 interface ApiService {
     @GET("neo/rest/v1/feed")
     suspend fun getAsteroidsList(
-        @Query("api_key") api_key: String = Constants.API_KEY,
         @Query("start_date") start_date: String,
         @Query("end_date") end_date: String
     ) : String
 
     @GET("planetary/apod")
-    suspend fun getImageOfTheDay(
-        @Query("api_key") api_key: String = Constants.API_KEY
-    ) : PictureOfDay
+    suspend fun getImageOfTheDay() : PictureOfDay
 }
 
 //The object Network instantiate the retrofit service "containing" the ApiService

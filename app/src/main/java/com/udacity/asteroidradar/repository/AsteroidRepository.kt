@@ -1,10 +1,8 @@
 package com.udacity.asteroidradar.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.udacity.asteroidradar.Asteroid
-import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.Network
 import com.udacity.asteroidradar.api.getSeventhDay
@@ -31,7 +29,6 @@ class AsteroidRepository(private val database: AsteroidRoomDatabase) {
     suspend fun refreshAsteroidsRepository() {
         try {
             val response = Network.retrofitServiceAsteroid.getAsteroidsList(
-                Constants.API_KEY,
                 getToday(),
                 getSeventhDay()
             )
@@ -47,7 +44,7 @@ class AsteroidRepository(private val database: AsteroidRoomDatabase) {
             "PlaceHolder",
             "https://apod.nasa.gov/apod/image/2201/MoonstripsAnnotatedIG_crop1024.jpg"          //this is a random img used as a placeholder in case of a video
         )
-        val responseImg = Network.retrofitServiceImage.getImageOfTheDay(Constants.API_KEY)
+        val responseImg = Network.retrofitServiceImage.getImageOfTheDay()
         if (responseImg.mediaType != "image") {
             return imgPlaceHolder
         }

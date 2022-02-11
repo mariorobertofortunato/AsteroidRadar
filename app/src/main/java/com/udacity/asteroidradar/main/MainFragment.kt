@@ -6,7 +6,6 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.R
@@ -32,7 +31,10 @@ class MainFragment : Fragment() {
         /**IMAGE*/
         viewModel.pictureOfTheDay.observe(viewLifecycleOwner, Observer {
             try {
-                Picasso.get().load(it.url).into(binding.activityMainImageOfTheDay)
+                Picasso.get()
+                    .load(it.url)
+                    .placeholder(R.drawable.placeholder_picture_of_day)
+                    .into(binding.activityMainImageOfTheDay)
             } catch (e: Exception) {
             }
         })

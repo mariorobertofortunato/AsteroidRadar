@@ -2,7 +2,6 @@ package com.udacity.asteroidradar.main
 
 
 import android.app.Application
-import android.content.ClipData
 import android.view.MenuItem
 import androidx.lifecycle.*
 import androidx.work.*
