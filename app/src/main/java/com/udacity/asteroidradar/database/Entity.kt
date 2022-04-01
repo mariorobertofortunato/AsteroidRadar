@@ -19,7 +19,7 @@ data class AsteroidDB constructor(
     val isPotentiallyHazardous: Boolean)
 
 /**
- * Map DatabaseVideos to domain entities =
+ * Map DatabaseAsteroid to domain entities =
  * convert AsteroidDB objects into domain objects.
  */
 fun List<AsteroidDB>.asDomainModel(): List<Asteroid> {

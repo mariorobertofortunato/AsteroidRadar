@@ -59,8 +59,7 @@ class AsteroidAdapter(private val clickListener: OnClickListener) :
     (Crea materialmente il VH inflatando il layout dell'item,
     mentre onBindViewHolder lo riempie con i dati)*/
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.list_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
         return ViewHolder(view)
     }
 
