@@ -2,7 +2,7 @@ package com.udacity.asteroidradar.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.model.Asteroid
 
 /** Defines the schema of the database, aka the fields of every entity in the DB
  * Each instance of Asteroid represents a row in a asteroid table in the app's database.*/

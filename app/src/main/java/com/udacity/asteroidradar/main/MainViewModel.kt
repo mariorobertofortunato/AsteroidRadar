@@ -1,24 +1,22 @@
 package com.udacity.asteroidradar.main
 
-
 import android.app.Application
 import android.view.MenuItem
 import androidx.lifecycle.*
 import androidx.work.*
-import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.R
-import com.udacity.asteroidradar.database.getDB
-import com.udacity.asteroidradar.repository.AsteroidRepository
+import com.udacity.asteroidradar.model.PictureOfDay
+import com.udacity.asteroidradar.repository.MainRepository
 import com.udacity.asteroidradar.work.RefreshWorker
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 enum class OptionMenu { SHOW_ALL, SHOW_TODAY, SHOW_WEEK }
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val database = getDB(application)
-    private val asteroidRepository = AsteroidRepository(database)
+@HiltViewModel
+class MainViewModel @Inject constructor(private val mainRepository: MainRepository) : ViewModel() {
 
     private var optionMenu = MutableLiveData(OptionMenu.SHOW_WEEK)                                  // default filter
 
@@ -28,9 +26,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     // switch case for defining the observable asteroids var depending on the option menu value (aka filter)
     val asteroids = Transformations.switchMap(optionMenu){
         when (it){
-            OptionMenu.SHOW_ALL -> asteroidRepository.allAsteroids
-            OptionMenu.SHOW_TODAY -> asteroidRepository.todayAsteroids
-            else -> asteroidRepository.weekAsteroids
+            OptionMenu.SHOW_ALL -> mainRepository.allAsteroids
+            OptionMenu.SHOW_TODAY -> mainRepository.todayAsteroids
+            else -> mainRepository.weekAsteroids
         }
     }
 
@@ -46,7 +44,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private fun refreshAsteroid() {
         viewModelScope.launch {
             try {
-                asteroidRepository.refreshAsteroidsRepository()
+                mainRepository.refreshAsteroidsRepository()
             } catch (e: Exception) {
             }
         }
@@ -55,7 +53,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private fun refreshImage() {
         viewModelScope.launch {
             try {
-                _pictureOfTheDay.value = asteroidRepository.refreshImageRepository()
+                _pictureOfTheDay.value = mainRepository.refreshImageRepository()
             } catch (e: Exception) {
             }
         }
@@ -77,6 +75,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val workRequest = PeriodicWorkRequestBuilder<RefreshWorker>(1, TimeUnit.DAYS)
             .setConstraints(constraints)
             .build()
-        WorkManager.getInstance(getApplication()).enqueueUniquePeriodicWork("work",ExistingPeriodicWorkPolicy.KEEP, workRequest)
+        WorkManager.getInstance(Application()).enqueueUniquePeriodicWork("work",ExistingPeriodicWorkPolicy.KEEP, workRequest)
     }
 }

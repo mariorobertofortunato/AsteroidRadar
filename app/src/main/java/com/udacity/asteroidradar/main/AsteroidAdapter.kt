@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.model.Asteroid
 import com.udacity.asteroidradar.R
 
 /** Adatta la lista di asteroidi in modo che posso essere mostrata dal RecyclerView
