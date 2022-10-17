@@ -2,38 +2,39 @@ package com.udacity.asteroidradar.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import com.udacity.asteroidradar.Asteroid
-import com.udacity.asteroidradar.PictureOfDay
-import com.udacity.asteroidradar.api.Network
-import com.udacity.asteroidradar.api.getSeventhDay
-import com.udacity.asteroidradar.api.getToday
-import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
+import com.udacity.asteroidradar.model.Asteroid
+import com.udacity.asteroidradar.model.PictureOfDay
+import com.udacity.asteroidradar.network.getSeventhDay
+import com.udacity.asteroidradar.network.getToday
+import com.udacity.asteroidradar.network.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.database.AsteroidRoomDatabase
 import com.udacity.asteroidradar.database.asDBModel
 import com.udacity.asteroidradar.database.asDomainModel
 import org.json.JSONObject
+import javax.inject.Inject
 
-class AsteroidRepository(private val database: AsteroidRoomDatabase) {
+class MainRepository @Inject constructor (private val databaseRepository: DBRepository,
+                                          private val networkRepository: NetworkRepository) {
 
-    var allAsteroids: LiveData<List<Asteroid>> = Transformations.map(database.asteroidDao.getAll())
+    var allAsteroids: LiveData<List<Asteroid>> = Transformations.map(databaseRepository.getAll())
     { it.asDomainModel() }
 
-    var todayAsteroids: LiveData<List<Asteroid>> = Transformations.map(database.asteroidDao.getToday(getToday()))
+    var todayAsteroids: LiveData<List<Asteroid>> = Transformations.map(databaseRepository.getToday(getToday()))
     { it.asDomainModel() }
 
-    var weekAsteroids: LiveData<List<Asteroid>> = Transformations.map(database.asteroidDao.getWeek(getToday(), getSeventhDay()))
+    var weekAsteroids: LiveData<List<Asteroid>> = Transformations.map(databaseRepository.getWeek(getToday(), getSeventhDay()))
     { it.asDomainModel() }
 
 
     /**API used to refresh offline cache (= the DB)*/
     suspend fun refreshAsteroidsRepository() {
         try {
-            val response = Network.retrofitServiceAsteroid.getAsteroidsList(
+            val response = networkRepository.getAsteroidsList(
                 getToday(),
                 getSeventhDay()
             )
             val asteroidFromNetwork = parseAsteroidsJsonResult(JSONObject(response))
-            database.asteroidDao.insertAll(asteroidFromNetwork.asDBModel())
+            databaseRepository.insertAll(asteroidFromNetwork.asDBModel())
         } catch (e: Exception) {
         }
     }
@@ -44,7 +45,7 @@ class AsteroidRepository(private val database: AsteroidRoomDatabase) {
             "PlaceHolder",
             "https://apod.nasa.gov/apod/image/2201/MoonstripsAnnotatedIG_crop1024.jpg"          //this is a random img used as a placeholder in case of a video
         )
-        val responseImg = Network.retrofitServiceImage.getImageOfTheDay()
+        val responseImg = networkRepository.getImageOfTheDay()
         if (responseImg.mediaType != "image") {
             return imgPlaceHolder
         }

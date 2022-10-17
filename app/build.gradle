@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.dagger.hilt.android'
 
 android {
     compileSdkVersion 33
@@ -95,4 +96,12 @@ dependencies {
 
     //Adding Swipe Refresh Layout Dependency
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    //Hilt
+    implementation 'com.google.dagger:hilt-android:2.44'
+    kapt 'com.google.dagger:hilt-compiler:2.44'
+}
+
+kapt {
+    correctErrorTypes true
 }
